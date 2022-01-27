@@ -13,11 +13,10 @@ namespace WireMockWithVies
         {
             var wireMockServerSettings = new WireMockServerSettings()
             {
-                Urls = new[] { "http://localhost:15000/" },
                 StartAdminInterface = true,
                 ProxyAndRecordSettings = new ProxyAndRecordSettings
                 {
-                    Url = "http://ec.europa.eu/taxation_customs/vies/services/checkVatService",
+                    Url = "http://ec.europa.eu",
                     SaveMapping = true,
                     SaveMappingToFile = true,
                     AllowAutoRedirect = true
@@ -26,7 +25,7 @@ namespace WireMockWithVies
 
             var wireMockServer = WireMockServer.Start(wireMockServerSettings);
 
-            checkVatPortTypeClient client = new checkVatPortTypeClient(checkVatPortTypeClient.EndpointConfiguration.checkVatPort, "http://ec.europa.eu/taxation_customs/vies/services/checkVatService");
+            checkVatPortTypeClient client = new checkVatPortTypeClient(checkVatPortTypeClient.EndpointConfiguration.checkVatPort, $"{wireMockServer.Urls[0]}/taxation_customs/vies/services/checkVatService");
             checkVatRequest request = new("GR", "123456789");
             var exception = await Record.ExceptionAsync(() => client.checkVatAsync(request));
 
